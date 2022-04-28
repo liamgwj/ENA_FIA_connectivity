@@ -9,8 +9,6 @@
 
 
 
-# create .ini file for circuitscape run ---------------------------------------
-
 # check for/create output directories
 now <- gsub("[:-]", "", gsub(" ", "T", Sys.time()))
 
@@ -21,11 +19,23 @@ if(!dir.exists(outdir)){dir.create(outdir, recursive = TRUE)}
 outfile <- file.path(outdir, "out")
 
 
+# copy input files to new 'circuitscape' directory and remove from 'output'
+file.copy(c(file.path("output", "normalized_host_abundance.asc"),
+            file.path("output", "nodes_normalized_host_abundance.asc")),
+          c(file.path(outdir,  "normalized_host_abundance.asc"),
+            file.path(outdir,  "nodes_normalized_host_abundance.asc")))
+
+file.remove(c(file.path("output", "normalized_host_abundance.asc"),
+              file.path("output", "nodes_normalized_host_abundance.asc")))
+
+
+# create .ini file for circuitscape run ---------------------------------------
+
 # specify suitability map file
-suitmap <- file.path(getwd(), "output", "normalized_host_abundance.asc")
+suitmap <- file.path(outdir, "normalized_host_abundance.asc")
 
 # specify node file
-nodemap <- file.path(getwd(), "output", "nodes_normalized_host_abundance.asc")
+nodemap <- file.path(outdir, "nodes_normalized_host_abundance.asc")
 
 
 # write .ini file
@@ -74,11 +84,11 @@ writeLines(
       "solver = cg+amg",
       
       "[Output options]",
-      "write_cum_cur_map_only = false",
+      "write_cum_cur_map_only = true",
       "log_transform_maps = false",
       paste0("output_file = ", outfile),
       "write_max_cur_maps = false",
-      "write_volt_maps = true",
+      "write_volt_maps = false",
       "set_null_currents_to_nodata = false",
       "set_null_voltages_to_nodata = false",
       "compress_grids = false",
@@ -94,4 +104,17 @@ XRJulia::juliaUsing("Circuitscape")
 XRJulia::juliaCommand(paste0("compute(\"",
                       file.path(outdir, "lastRun.ini"),
                       "\")"))
+
+
+# check output -----------------------------
+
+cur <- raster::raster(file.path("output", 
+                                paste0("circuitscape_", now),
+                                "out_cum_curmap.asc"))
+
+suit <- raster::raster(suitmap)
+
+raster::plot(cur)
+
+dev.new(); raster::plot(suit)
 

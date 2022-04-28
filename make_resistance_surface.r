@@ -1,4 +1,6 @@
 # LJ 2022-04-04
+# read in raster stack of 110 FIA tree species, subset to known hosts, and
+# assign suitability value to each cell
 
 library(raster)
 
@@ -10,26 +12,24 @@ allstack <- stack(file.path("indata", "final_raster_stack",
 trees <- read.csv(file.path("indata", "final_common_species_used.csv"))
 
 # add latin binomial column
-trees$latbi <- paste(trees$GENUS, trees$SPECIES)
+trees$latbi <- paste(trees$GENUS, trees$SPECIES, sep = " ")
 
 
-# pest database
-# Only 38 species shared between NA_Host and tree maps...
-#pest_db <- read.csv(file.path("indata", "InsectxNAHost.csv"))
-#
-# choose a pest
-#allpests <- unique(pest_db$Insect)
-#
-#pest_i <- allpests[1]
-#
-# identify hosts
-#hostnames <- pest_db[which(pest_db$Insect == pest_i), "NA_Host"]
+# read in list of Amanita phalloides hosts from BC gov pamphlet
+#hosts <- read.csv(file.path("indata", "BCgov_amanitaP-hosts.csv"))
 
-# for now, select some trees with maps to serve as "hosts"
-hostnames <- c("Acer rubrum", sample(trees$latbi, 3))
+#hostnames <- hosts$Host
+
+# AP host genera from wolf and pringle
+hostgen <- read.csv(file.path("indata", "WP2012_AmanitaP_hostGen.csv"))
+
+hostgen <- hostgen$Host_Genus
+
 
 # FIA species codes
-hostcodes <- trees[which(trees$latbi %in% hostnames), "SPCD"]
+hostcodes <- trees[which(trees$GENUS %in% hostgen), "SPCD"]
+#hostcodes <- trees[which(trees$latbi %in% hostnames), "SPCD"]
+
 
 # match orthography to raster stack layer names
 hostlayers <- paste0("X", hostcodes)
@@ -63,7 +63,12 @@ hostrasnorm[,] <- hostmatnorm
 # write out
 if(!dir.exists("output")){dir.create("output")}
 
-writeRaster(hostrasnorm,
+#writeRaster(hostrasnorm,
+#            file.path("output", "normalized_host_abundance"),
+#            "ascii")
+
+# smaller testing subset
+writeRaster(crop(hostrasnorm, extent(hostrasnorm, 200, 500, 200, 500)),
             file.path("output", "normalized_host_abundance"),
             "ascii")
 
