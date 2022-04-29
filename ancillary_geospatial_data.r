@@ -1,7 +1,5 @@
-### currently an unfinished mess
-
 # LJ 2022-04-25 adapted from Jason's "ancillary_geospatial_data.Rmd"
-## Preparing ancillary geospatial layers
+# Preparing ancillary geospatial layers
 
 #This script deals with importing the human footprint and other layers to be used in generating resistance surface maps.
 

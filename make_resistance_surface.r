@@ -65,10 +65,12 @@ if(!dir.exists("output")){dir.create("output")}
 
 #writeRaster(hostrasnorm,
 #            file.path("output", "normalized_host_abundance"),
-#            "ascii")
+#            "ascii",
+#            overwrite = TRUE)
 
 # smaller testing subset
 writeRaster(crop(hostrasnorm, extent(hostrasnorm, 200, 500, 200, 500)),
             file.path("output", "normalized_host_abundance"),
-            "ascii")
+            "ascii",
+            overwrite = TRUE)
 

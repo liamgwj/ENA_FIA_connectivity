@@ -61,5 +61,6 @@ nodes[tmp[length(tmp)], col] <- nfocalrows + nfocalcols + i
 
 writeRaster(nodes,
             file.path("output", paste0("nodes_", infile)),
-            "ascii")
+            "ascii",
+            overwrite = TRUE)
 

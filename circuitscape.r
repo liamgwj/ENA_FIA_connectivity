@@ -105,16 +105,3 @@ XRJulia::juliaCommand(paste0("compute(\"",
                       file.path(outdir, "lastRun.ini"),
                       "\")"))
 
-
-# check output -----------------------------
-
-cur <- raster::raster(file.path("output", 
-                                paste0("circuitscape_", now),
-                                "out_cum_curmap.asc"))
-
-suit <- raster::raster(suitmap)
-
-raster::plot(cur)
-
-dev.new(); raster::plot(suit)
-
