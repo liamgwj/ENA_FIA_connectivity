@@ -16,7 +16,7 @@ nodes[,] <- 0
 # create nodes ---------------------------------
 
 # specify spacing
-spacing <- 40
+spacing <- 400
 
 # for a subset of rows, assign the first and last non-zero suitability cells in
 # each row a unique numeric node ID

@@ -22,8 +22,8 @@ outfile <- file.path(outdir, "out")
 # copy input files to new 'circuitscape' directory and remove from 'output'
 file.copy(c(file.path("output", "normalized_host_abundance.asc"),
             file.path("output", "nodes_normalized_host_abundance.asc")),
-          c(file.path(outdir,  "normalized_host_abundance.asc"),
-            file.path(outdir,  "nodes_normalized_host_abundance.asc")))
+          c(file.path(outdir, "normalized_host_abundance.asc"),
+            file.path(outdir, "nodes_normalized_host_abundance.asc")))
 
 file.remove(c(file.path("output", "normalized_host_abundance.asc"),
               file.path("output", "nodes_normalized_host_abundance.asc")))

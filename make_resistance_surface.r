@@ -36,7 +36,7 @@ hostlayers <- paste0("X", hostcodes)
 
 
 # subset layers corresponding to hosts
-hoststack <- subset(allstack, hostlayers, drop=FALSE)
+hoststack <- subset(allstack, hostlayers, drop = FALSE)
 
 # extract a reduced chunk for testing
 #hoststack <- hoststack[500:1000, 500:1500, drop = FALSE]
@@ -63,10 +63,10 @@ hostrasnorm[,] <- hostmatnorm
 # write out
 if(!dir.exists("output")){dir.create("output")}
 
-#writeRaster(hostrasnorm,
-#            file.path("output", "normalized_host_abundance"),
-#            "ascii",
-#            overwrite = TRUE)
+writeRaster(hostrasnorm,
+            file.path("output", "normalized_host_abundance"),
+            "ascii",
+            overwrite = TRUE)
 
 # smaller testing subset
 writeRaster(crop(hostrasnorm, extent(hostrasnorm, 200, 500, 200, 500)),
