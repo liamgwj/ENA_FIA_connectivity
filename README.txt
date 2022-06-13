@@ -1,17 +1,11 @@
-LJ 2022-04-28  ENA_FIA_connectivity
+LJ 2022-05-13
 
-folder 'indata' contains the tree species distribution raster stack and list of
-suitable host trees
+scripts are run in order:
 
-scripts are run in order: make_resistance_surface -> make_nodes -> circuitscape
-they create folder 'output' with a subdirectory for the circuitscape run
+host_codes.r (interactive) -> make_resistance_surface.r -> make_nodes.r ->
+cscape_ini.r
 
+the latter three are sourced via source_scripts.r
 
-
-
-
-todo:
-
-figure out boundary/buffer for plotting - either use state maps or edge of raster?
-
-plot out presentation
+the output files are then used to run circuitscape in Julia, and the
+circuitscape outputs are fed into plotting.r (sourced)

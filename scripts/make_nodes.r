@@ -4,7 +4,7 @@
 library(raster)
 
 # load suitability map
-infile <- "normalized_host_abundance.asc"
+infile <- paste0(ID, "_suitability.asc")
 
 map <- raster(file.path("output", infile))
 
@@ -16,7 +16,7 @@ nodes[,] <- 0
 # create nodes ---------------------------------
 
 # specify spacing
-spacing <- 400
+spacing <- 100
 
 # for a subset of rows, assign the first and last non-zero suitability cells in
 # each row a unique numeric node ID

@@ -1,41 +1,13 @@
-# Circuitscape connectivity analysis
-# LJ 2021-11-26 updated 2022-04-05
-
-# input data format
-# conductance surface:
-# a raster with cell values equal to modelled suitability for the focal pest
-# source/ground node file:
-# a raster with the same extent as the conductance surface, with focal nodes located at uniform intervals around the perimeter of the map
-
-
-
-# check for/create output directories
-now <- gsub("[:-]", "", gsub(" ", "T", Sys.time()))
-
-outdir <- file.path(getwd(), "output", paste0("circuitscape_", now))
-
-if(!dir.exists(outdir)){dir.create(outdir, recursive = TRUE)}
-
-outfile <- file.path(outdir, "out")
-
-
-# copy input files to new 'circuitscape' directory and remove from 'output'
-file.copy(c(file.path("output", "normalized_host_abundance.asc"),
-            file.path("output", "nodes_normalized_host_abundance.asc")),
-          c(file.path(outdir, "normalized_host_abundance.asc"),
-            file.path(outdir, "nodes_normalized_host_abundance.asc")))
-
-file.remove(c(file.path("output", "normalized_host_abundance.asc"),
-              file.path("output", "nodes_normalized_host_abundance.asc")))
-
-
-# create .ini file for circuitscape run ---------------------------------------
+# LJ 2021-11-26 write ini file for circuitscape run
 
 # specify suitability map file
-suitmap <- file.path(outdir, "normalized_host_abundance.asc")
+suitmap <- paste0("/home/liamgwj/circuitscape/", ID, "/", ID, "_suitability.asc")
 
 # specify node file
-nodemap <- file.path(outdir, "nodes_normalized_host_abundance.asc")
+nodemap <- paste0("/home/liamgwj/circuitscape/", ID, "/nodes_", ID, "_suitability.asc")
+
+
+outfile <- paste0("/scratch/st-jpither-1/liamgwj/out_", ID)
 
 
 # write .ini file
@@ -94,14 +66,7 @@ writeLines(
       "compress_grids = false",
       "write_cur_maps = true"
     ),
-    con = file.path(outdir, "lastRun.ini"))
+    con = file.path("output", paste0(ID, ".ini"))
+)
 
-
-# run Circuitscape ------------------------------------------------------------
-
-XRJulia::juliaUsing("Circuitscape")
-
-XRJulia::juliaCommand(paste0("compute(\"",
-                      file.path(outdir, "lastRun.ini"),
-                      "\")"))
 
