@@ -65,10 +65,11 @@ hostrasnormHfoot <- overlay(hfoot, hostrasnorm, fun=function(x,y){y[x==1]<-0;y})
 
 # write out --------------------------------------------------------------------
 
-if(!dir.exists("output")){dir.create("output")}
+if(!dir.exists(file.path("output", ID))){
+    dir.create(file.path("output", ID), recursive = TRUE)}
 
 writeRaster(hostrasnormHfoot,
-            file.path("output", paste0(ID, "_suitability")),
+            file.path("output", ID, paste0(ID, "_suitability")),
             "ascii",
             overwrite = TRUE)
 

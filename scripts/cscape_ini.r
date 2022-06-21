@@ -1,13 +1,25 @@
-# LJ 2021-11-26 write ini file for circuitscape run
+# LJ 2021-11-26 create files needed to run circuitscape
+
+
+# julia script to run circuitscape ---------------------------------------------
+
+writeLines(c("using Circuitscape",
+             paste0("compute(\"/scratch/st-jpither-1/liamgwj/",
+                    ID, "/", ID, ".ini\")")),
+           con = file.path("output", ID, paste0(ID, "_cscape.jl"))
+)
+
+
+# .ini file fed to circuitscape call -------------------------------------------
 
 # specify suitability map file
-suitmap <- paste0("/home/liamgwj/circuitscape/", ID, "/", ID, "_suitability.asc")
+suitmap <- paste0("/scratch/st-jpither-1/liamgwj/", ID, "/", ID, "_suitability.asc")
 
 # specify node file
-nodemap <- paste0("/home/liamgwj/circuitscape/", ID, "/nodes_", ID, "_suitability.asc")
+nodemap <- paste0("/scratch/st-jpither-1/liamgwj/", ID, "/nodes_", ID, "_suitability.asc")
 
-
-outfile <- paste0("/scratch/st-jpither-1/liamgwj/out_", ID)
+# specify output file
+outfile <- paste0("/scratch/st-jpither-1/liamgwj/", ID, "/out_", ID)
 
 
 # write .ini file
@@ -66,7 +78,36 @@ writeLines(
       "compress_grids = false",
       "write_cur_maps = true"
     ),
-    con = file.path("output", paste0(ID, ".ini"))
+    con = file.path("output", ID, paste0(ID, ".ini"))
 )
+
+
+# pbs script to submit job to cluster ------------------------------------------
+
+writeLines(c("#!/bin/bash",
+             "# ------------Sockeye Parameters----------------- #",
+             "#PBS -l walltime=05:00:00,select=1:ncpus=24:mem=100gb",
+             paste0("#PBS -N ", ID, "_cscape"),
+             "#PBS -A st-jpither-1",
+             "#PBS -m abe",
+             "#PBS -M liam.johnson@ubc.ca",
+             paste0("#PBS -o ", ID, "_output.txt"),
+             paste0("#PBS -e ", ID, "_error.txt"),
+             "# ----------------Modules------------------------- #",
+             "module load Software_Collection/2021",
+             "module load gcc/9.4.0 intel-mkl/2020.4.304 julia/1.6.1",
+             "# -----------------My Commands-------------------- #",
+             paste0("julia /scratch/st-jpither-1/liamgwj/",
+                    ID, "/", ID, "_cscape.jl")),
+           con = file.path("output", ID, paste0(ID, "_cscape.pbs")))
+
+
+# bash commands to connect to cluster, move files and queue pbs script ---------
+
+writeLines(c(paste0("scp -r /home/liam/Documents/MSc/analysis/ENA_FIA_connectivity/output/", ID, " liamgwj@dtn.sockeye.arc.ubc.ca:/scratch/st-jpither-1/liamgwj"),
+             "ssh liamgwj@sockeye.arc.ubc.ca",
+             paste0("cd /scratch/st-jpither-1/liamgwj/", ID),
+             paste0("qsub ", ID, "_cscape.pbs")),
+           con = file.path("output", ID, paste0(ID, "_bash.txt")))
 
 

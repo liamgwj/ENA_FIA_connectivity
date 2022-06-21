@@ -6,7 +6,7 @@ library(raster)
 # load suitability map
 infile <- paste0(ID, "_suitability.asc")
 
-map <- raster(file.path("output", infile))
+map <- raster(file.path("output", ID, infile))
 
 
 # create empty node raster
@@ -60,7 +60,7 @@ nodes[tmp[length(tmp)], col] <- nfocalrows + nfocalcols + i
 # write node map to file
 
 writeRaster(nodes,
-            file.path("output", paste0("nodes_", infile)),
+            file.path("output", ID, paste0("nodes_", infile)),
             "ascii",
             overwrite = TRUE)
 

@@ -17,6 +17,8 @@ hostsp <- data.frame(Species = c("Carpinus betulus", "Quercus robur", "Castanea 
 # match to codes
 hostcodes <- fiatax[which(fiatax$latbi %in% hostsp$Species), "SPCD"]
 
+# set ID
+ID <- "APSP"
 
 # genus level ------------------------------------------------------------------
 
